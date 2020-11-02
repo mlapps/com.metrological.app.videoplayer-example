@@ -13,6 +13,15 @@ export default class Button extends Lightning.Component {
         x: 5,
         y: 5,
       },
+      Label: {
+        x: w => w / 2,
+        y: h => h / 2,
+        mount: 0.5,
+        text: {
+          text: '',
+          textColor: 0xff000000,
+        },
+      },
     }
   }
 
@@ -21,7 +30,15 @@ export default class Button extends Lightning.Component {
   }
 
   set icon(v) {
-    this.tag('Icon').src = Utils.asset('images/' + v + '.png')
+    if (v) {
+      this.tag('Icon').src = Utils.asset('images/' + v + '.png')
+    }
+  }
+
+  set label(v) {
+    if (v) {
+      this.tag('Label').text.text = v
+    }
   }
 
   _handleEnter() {

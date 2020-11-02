@@ -16,6 +16,14 @@ export const buttons = [
     action: '$stop',
   },
   {
+    label: '|<',
+    action: '$previous',
+  },
+  {
+    label: '>|',
+    action: '$next',
+  },
+  {
     icon: 'rewind',
     action: '$rewind',
   },
@@ -47,4 +55,14 @@ export const buttons = [
     icon: 'visible',
     action: '$showHide',
   },
+]
+
+export const videos = [
+  'http://video.metrological.com/surfing.mp4',
+  'http://video.metrological.com/hot_town.mp4',
+  'http://video.metrological.com/fireworks_paris.mp4',
+  'http://video.metrological.com/drop.mp4',
+  'http://video.metrological.com/iceland.mp4',
+  'http://video.metrological.com/stockholm.mp4',
+  'http://video.metrological.com/throw-error.mp4',
 ]
