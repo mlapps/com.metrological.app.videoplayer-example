@@ -1,6 +1,6 @@
 import { Utils, Router } from '@lightningjs/sdk'
 import Menu from './widgets/Menu'
-import routes from './lib/routes'
+import routes from './routes'
 
 export default class App extends Router.App {
   static getFonts() {
@@ -22,7 +22,7 @@ export default class App extends Router.App {
   // when App instance is initialized we call the routes
   // this will setup all pages and attach them to there route
   _setup() {
-    Router.startRouter(routes, this)
+    Router.startRouter(routes)
   }
 
   _handleUp() {

@@ -3,6 +3,7 @@ import { Lightning, Router } from '@lightningjs/sdk'
 const menuItems = [
   { label: 'Simple', route: 'simple' },
   { label: 'Advanced', route: 'advanced' },
+  { label: 'Complete', route: 'complete' },
 ]
 
 export default class Menu extends Lightning.Component {

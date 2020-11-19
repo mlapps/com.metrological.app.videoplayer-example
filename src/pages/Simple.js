@@ -2,7 +2,7 @@ import { Lightning, VideoPlayer } from '@lightningjs/sdk'
 import ErrorScreen from '@/components/ErrorScreen.js'
 import { videos } from '@/lib/helpers'
 import Button from '@/components/Button'
-import ProgressBar from '@/components/ProgressBar'
+import VideoUi from '@/components/VideoUi'
 
 const bgColor = 0xff444444
 const buttons = [
@@ -39,17 +39,17 @@ export default class Simple extends Lightning.Component {
         alpha: 0,
       },
       Ui: {
-        x: 20,
-        y: 910,
-        w: w => w - 40,
-        mountY: 1,
-        Buttons: {
-          flex: { direction: 'row' },
-        },
-        ProgressBar: {
-          y: 70,
-          type: ProgressBar,
-        },
+        mountX: 0.5,
+        x: 960,
+        y: 830,
+        type: VideoUi,
+        buttons: [
+          {
+            ref: 'PlayPause',
+            icon: 'play',
+            action: '$playPause',
+          },
+        ],
       },
     }
   }
