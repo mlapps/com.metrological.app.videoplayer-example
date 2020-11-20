@@ -26,9 +26,9 @@ export default class Simple extends Lightning.Component {
       color: bgColor,
       rect: true,
       Text: {
-        x: w => w / 2,
-        y: h => h / 2,
-        mount: 0.5,
+        x: w => w - 20,
+        y: 20,
+        mountX: 1,
         text: {
           text: 'Simple example',
           textColor: 0xffffffff,
@@ -137,7 +137,11 @@ export default class Simple extends Lightning.Component {
   }
 
   _handleLeft() {
-    this._index = Math.max(0, this._index - 1)
+    if (this._index > 0) {
+      this._index = Math.max(0, this._index - 1)
+    } else {
+      return false
+    }
   }
 
   _handleRight() {
@@ -145,7 +149,8 @@ export default class Simple extends Lightning.Component {
   }
 
   _getFocused() {
-    return this.tag('Ui.Buttons').children[this._index]
+    return this
+    // return this.tag('Ui.Buttons').children[this._index]
   }
 
   set playing(v) {

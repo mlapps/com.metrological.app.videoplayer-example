@@ -9,21 +9,65 @@ const menuItems = [
 export default class Menu extends Lightning.Component {
   static _template() {
     return {
-      w: 1920,
-      h: 100,
+      x: -210,
+      w: 280,
+      h: 1080,
       rect: true,
       color: 0x44000000,
-      Items: {
-        x: 60,
-        y: h => h / 2,
-        mountY: 0.5,
-        flex: {},
-      },
       Focus: {
-        y: h => h / 2 + 25,
-        h: 4,
+        y: 80,
+        h: 60,
+        mountY: 0.5,
+        w: w => w,
         rect: true,
         color: 0x00ffffff,
+      },
+      Items: {
+        x: 30,
+        y: 80,
+        flex: {
+          direction: 'column',
+        },
+      },
+      MenuIcon: {
+        y: 10,
+        x: w => w - 10,
+        mountX: 1,
+        w: 50,
+        h: 50,
+        rect: true,
+        color: 0x44ffffff,
+        shader: {
+          type: Lightning.shaders.RoundedRectangle,
+          radius: 5,
+        },
+        Line1: {
+          w: w => w - 15,
+          x: 7.5,
+          y: 12,
+          h: 2,
+          mountY: 0.5,
+          rect: true,
+          color: 0xffffffff,
+        },
+        Line2: {
+          w: w => w - 15,
+          x: 7.5,
+          y: h => h / 2,
+          mountY: 0.5,
+          h: 2,
+          rect: true,
+          color: 0xffffffff,
+        },
+        Line3: {
+          w: w => w - 15,
+          x: 7.5,
+          y: h => h - 12,
+          h: 2,
+          mountY: 0.5,
+          rect: true,
+          color: 0xffffffff,
+        },
       },
     }
   }
@@ -43,7 +87,19 @@ export default class Menu extends Lightning.Component {
     })
   }
 
+  _handleUp() {
+    if (this._index > 0) {
+      this._setActiveItem(this._index - 1)
+    }
+  }
+
   _handleDown() {
+    if (this._index < this.tag('Items').children.length - 1) {
+      this._setActiveItem(this._index + 1)
+    }
+  }
+
+  _handleRight() {
     Router.restoreFocus()
   }
 
@@ -52,39 +108,27 @@ export default class Menu extends Lightning.Component {
     Router.navigate(this.activeItem.route)
   }
 
-  _handleLeft() {
-    if (this._index > 0) {
-      this._setActiveItem(this._index - 1)
-    }
-  }
-
-  _handleRight() {
-    if (this._index < this.tag('Items').children.length - 1) {
-      this._setActiveItem(this._index + 1)
-    }
-  }
-
   _setActiveItem(index, immediate) {
     this.activeItem.setFocus(false, immediate)
     this._index = index
     this.activeItem.setFocus(true, immediate)
     this.tag('Focus').patch({
       smooth: {
-        x: 60 + this.activeItem.finalX,
-        w: [this.activeItem.finalW, { duration: immediate ? 0 : 0.2 }],
+        y: 100 + this.activeItem.finalY,
       },
     })
   }
 
   _focus() {
-    this.tag('Focus').setSmooth('color', 0xffffffff)
+    this.setSmooth('x', 0)
+    this.tag('Focus').setSmooth('color', 0x33ffffff)
     this.tag('Focus').patch({
-      x: 60 + this.activeItem.finalX,
-      w: this.activeItem.finalW,
+      y: 100 + this.activeItem.finalY,
     })
   }
 
   _unfocus() {
+    this.setSmooth('x', -210)
     this.tag('Focus').color = 0x00ffffff
     this._setActiveItem(this._activeIndex)
   }
@@ -97,7 +141,7 @@ export default class Menu extends Lightning.Component {
 class MenuItem extends Lightning.Component {
   static _template() {
     return {
-      flexItem: { marginRight: 72 },
+      h: 60,
       color: 0xff666666,
       text: {
         fontSize: 30,

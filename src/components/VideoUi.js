@@ -169,6 +169,8 @@ export default class VideoUi extends Lightning.Component {
         _handleLeft() {
           if (this._index > 0) {
             this._index--
+          } else {
+            return false
           }
         }
         _handleRight() {
