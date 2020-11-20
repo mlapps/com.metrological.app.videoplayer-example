@@ -25,13 +25,6 @@ export default class App extends Router.App {
     Router.startRouter(routes)
   }
 
-  _init() {
-    console.log(Router.getActivePage())
-    console.log(Router.getActiveWidget())
-    console.log(Router.getActiveRoute())
-    console.log(Router.getActiveHash())
-  }
-
   _handleLeft() {
     Router.focusWidget('menu')
   }

@@ -82,8 +82,14 @@ export default class Menu extends Lightning.Component {
     this.tag('Items').children = menuItems.map(item => {
       return { type: MenuItem, item }
     })
+  }
+
+  _firstActive() {
+    const route = Router.getActiveRoute() || menuItems[0].route
+    const routeIndex = menuItems.findIndex(menuItem => menuItem.route === route)
     this.tag('Items').children[this._index].on('txLoaded', () => {
-      this._setActiveItem(0, true)
+      this._activeIndex = routeIndex
+      this._setActiveItem(routeIndex, true)
     })
   }
 
