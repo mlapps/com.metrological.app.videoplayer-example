@@ -1,4 +1,4 @@
-import { Advanced, Simple, Complete } from './pages'
+import { Advanced, Simple, Complete, Debug } from './pages'
 
 export default {
   root: 'simple',
@@ -16,6 +16,11 @@ export default {
     {
       path: 'complete',
       component: Complete,
+      widgets: ['Menu'],
+    },
+    {
+      path: 'debug',
+      component: Debug,
       widgets: ['Menu'],
     },
   ],
