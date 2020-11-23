@@ -68,6 +68,7 @@ export default class Debug extends Lightning.Component {
         alpha: 0,
       },
     })
+    this.tag('Logger').clear()
   }
 
   _getFocused() {

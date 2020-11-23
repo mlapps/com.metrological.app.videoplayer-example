@@ -106,7 +106,9 @@ export default class Logger extends Lightning.Component {
       },
       Timestamp: {
         text: {
-          text: `[ ${log.timeStamp} ]`,
+          text: `[ ${formatTime(parseInt(log.timeStamp / 1000) % (60 * 60))}:${(
+            parseInt(log.timeStamp % 1000) + '000'
+          ).slice(0, 4)} ]`,
           fontSize: 20,
         },
         color: 0xff66dd66,
@@ -124,9 +126,13 @@ export default class Logger extends Lightning.Component {
     this.logs.length > 13 && (this.logs[14].alpha = 0.1)
     this.tag('Logs').children = this.logs
   }
+  clear() {
+    this.logs = []
+    this.tag('Logs').children = this.logs
+  }
   log(msg) {
     this.playerUpdated({
-      timeStamp: formatTime(parseInt(Date.now() / 1000) % (60 * 60)),
+      timeStamp: Date.now(),
       type: msg,
     })
   }
