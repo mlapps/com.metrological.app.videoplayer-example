@@ -27,8 +27,6 @@ export default class Logger extends Lightning.Component {
   _init() {
     this.logs = []
 
-    console.log(document.getElementsByTagName('video')[0])
-
     document
       .getElementsByTagName('video')[0]
       .addEventListener('abort', this.playerUpdated.bind(this))
@@ -121,9 +119,9 @@ export default class Logger extends Lightning.Component {
         color: 0xffffffff,
       },
     })
-    this.logs.length > 11 && (this.logs[12].alpha = 0.6)
-    this.logs.length > 12 && (this.logs[13].alpha = 0.3)
-    this.logs.length > 13 && (this.logs[14].alpha = 0.1)
+    this.logs.length > 12 && (this.logs[12].alpha = 0.6)
+    this.logs.length > 13 && (this.logs[13].alpha = 0.3)
+    this.logs.length > 14 && (this.logs[14].alpha = 0.1)
     this.tag('Logs').children = this.logs
   }
   clear() {
