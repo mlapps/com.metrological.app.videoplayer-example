@@ -1,4 +1,5 @@
 import { Lightning, Router } from '@lightningjs/sdk'
+import MenuItem from '@/components/MenuItem'
 
 const menuItems = [
   { label: 'Simple', route: 'simple' },
@@ -112,6 +113,7 @@ export default class Menu extends Lightning.Component {
   _handleEnter() {
     this._activeIndex = this._index
     Router.navigate(this.activeItem.route)
+    Router.restoreFocus()
   }
 
   _setActiveItem(index, immediate) {
@@ -141,39 +143,5 @@ export default class Menu extends Lightning.Component {
 
   _getFocused() {
     return this.activeItem
-  }
-}
-
-class MenuItem extends Lightning.Component {
-  static _template() {
-    return {
-      h: 60,
-      color: 0xff666666,
-      text: {
-        fontSize: 30,
-      },
-    }
-  }
-
-  set item(v) {
-    this._item = v
-
-    this.patch({
-      text: {
-        text: this._item.label,
-      },
-    })
-  }
-
-  get item() {
-    return this._item
-  }
-
-  get route() {
-    return this._item.route
-  }
-
-  setFocus(state, immediate) {
-    this.setSmooth('color', state ? 0xffffffff : 0xff666666, { duration: immediate ? 0 : 0.2 })
   }
 }
