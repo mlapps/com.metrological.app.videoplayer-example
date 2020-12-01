@@ -18,14 +18,11 @@ export default class VideoUi extends Lightning.Component {
         mountX: 0.5,
         x: 750,
       },
-      Resize: {
-        type: Button,
-        icon: 'shrink',
-        action: '$toggleResize',
-        ref: 'Resize',
+      RightButtons: {
+        flex: {},
+        y: 80,
         mountX: 1,
         x: 1482,
-        y: 80,
       },
       Timer: {
         rect: true,
@@ -145,6 +142,14 @@ export default class VideoUi extends Lightning.Component {
     return this._buttons || []
   }
 
+  set previousDisabled(v) {
+    this.tag('Previous').disabled = v
+  }
+
+  set nextDisabled(v) {
+    this.tag('Next').disabled = v
+  }
+
   _firstActive() {
     this._index = 0
     this.tag('Buttons').children = this.buttons.map((button, index) => {
@@ -153,9 +158,20 @@ export default class VideoUi extends Lightning.Component {
         type: Button,
         icon: button.icon,
         action: button.action,
+        disabled: button.disabled || false,
         ref: button.ref || 'Button' + index,
       })
     })
+    if (this.rightButtons) {
+      this.tag('RightButtons').children = this.rightButtons.map((button, index) =>
+        this.stage.c({
+          type: Button,
+          icon: button.icon,
+          action: button.action,
+          ref: button.ref || 'Button' + index,
+        })
+      )
+    }
 
     this._setState('Buttons')
   }

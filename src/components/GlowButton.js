@@ -43,8 +43,17 @@ export default class GlowButton extends Lightning.Component {
     this.tag('Icon').src = Utils.asset('images/' + v + '.png')
   }
 
+  set disabled(v) {
+    this._disabled = v
+    this.patch({
+      smooth: {
+        alpha: [v ? 0.3 : 1],
+      },
+    })
+  }
+
   _handleEnter() {
-    this.action && this.fireAncestors(this.action)
+    !this._disabled && this.action && this.fireAncestors(this.action)
   }
 
   _focus() {
