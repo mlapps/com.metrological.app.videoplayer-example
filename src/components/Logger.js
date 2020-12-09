@@ -1,4 +1,4 @@
-import { Lightning } from '@lightningjs/sdk'
+import { Lightning, VideoPlayer } from '@lightningjs/sdk'
 import { formatTime } from '@/lib/helpers'
 
 export default class Logger extends Lightning.Component {
@@ -24,76 +24,15 @@ export default class Logger extends Lightning.Component {
       },
     }
   }
+
   _init() {
     this.logs = []
-
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('abort', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('canplay', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('canplaythrough', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('durationchange', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('emptied', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('ended', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('error', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('loadeddata', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('loadedmetadata', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('loadstart', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('pause', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('play', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('playing', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('progress', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('ratechange', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('seeked', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('seeking', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('stalled', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('suspend', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('timeupdate', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('volumechange', this.playerUpdated.bind(this))
-    document
-      .getElementsByTagName('video')[0]
-      .addEventListener('waiting', this.playerUpdated.bind(this))
   }
+
+  _active() {
+    VideoPlayer.consumer(this)
+  }
+
   playerUpdated(log) {
     if (this.logs.length >= 15) {
       this.logs.pop()
@@ -124,14 +63,24 @@ export default class Logger extends Lightning.Component {
     this.logs.length > 14 && (this.logs[14].alpha = 0.1)
     this.tag('Logs').children = this.logs
   }
+
   clear() {
     this.logs = []
     this.tag('Logs').children = this.logs
   }
+
   log(msg) {
     this.playerUpdated({
       timeStamp: Date.now(),
       type: msg,
     })
+  }
+
+  $videoPlayerEvent(eventName, eventObject) {
+    if (eventObject) {
+      this.playerUpdated({ type: eventName, timeStamp: eventObject.event.timeStamp })
+    } else {
+      this.playerUpdated({ type: eventName, timeStamp: Date.now() })
+    }
   }
 }

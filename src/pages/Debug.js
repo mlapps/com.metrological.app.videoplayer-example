@@ -75,6 +75,10 @@ export default class Debug extends Lightning.Component {
     return this.tag('VideoUi.Buttons').children[this._index]
   }
 
+  set playing(v) {
+    this.tag('VideoUi.Buttons.PlayPause').icon = v === true ? 'pause' : 'play'
+  }
+
   // Button actions
   $playPause(next = false) {
     // If next is true, clear VideoPlayer (which also sets src to null)
@@ -104,7 +108,9 @@ export default class Debug extends Lightning.Component {
     this.playing = true
   }
 
-  $videoPlayerPause() {}
+  $videoPlayerPause() {
+    this.playing = false
+  }
 
   $videoPlayerAbort() {
     this.patch({
@@ -112,6 +118,7 @@ export default class Debug extends Lightning.Component {
         color: [bgColor],
       },
     })
+    this.playing = false
   }
 
   $videoPlayerEnded() {
@@ -119,9 +126,13 @@ export default class Debug extends Lightning.Component {
     this.$playPause(true)
   }
 
-  $videoPlayerTimeUpdate() {}
+  $videoPlayerTimeUpdate() {
+    this.tag('VideoUi').currentTime = VideoPlayer.currentTime
+  }
 
-  $videoPlayerLoadedMetadata() {}
+  $videoPlayerLoadedMetadata() {
+    this.tag('VideoUi').duration = VideoPlayer.duration
+  }
 
   $videoPlayerError() {
     this.patch({
