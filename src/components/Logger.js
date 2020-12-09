@@ -29,10 +29,6 @@ export default class Logger extends Lightning.Component {
     this.logs = []
   }
 
-  _active() {
-    VideoPlayer.consumer(this)
-  }
-
   playerUpdated(log) {
     if (this.logs.length >= 15) {
       this.logs.pop()
@@ -74,13 +70,5 @@ export default class Logger extends Lightning.Component {
       timeStamp: Date.now(),
       type: msg,
     })
-  }
-
-  $videoPlayerEvent(eventName, eventObject) {
-    if (eventObject) {
-      this.playerUpdated({ type: eventName, timeStamp: eventObject.event.timeStamp })
-    } else {
-      this.playerUpdated({ type: eventName, timeStamp: Date.now() })
-    }
   }
 }

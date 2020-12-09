@@ -94,6 +94,14 @@ export default class Debug extends Lightning.Component {
   }
 
   // Hooks for VideoPlayer events
+  $videoPlayerEvent(eventName, eventObject) {
+    if (eventObject) {
+      this.tag('Logger').playerUpdated({ type: eventName, timeStamp: eventObject.event.timeStamp })
+    } else {
+      this.tag('Logger').playerUpdated({ type: eventName, timeStamp: Date.now() })
+    }
+  }
+
   $videoPlayerPlaying() {
     this.patch({
       smooth: {
