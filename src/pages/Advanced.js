@@ -16,9 +16,9 @@ export default class Advanced extends Lightning.Component {
       rect: true,
       color: bgColor,
       Text: {
-        x: w => w / 2,
-        y: h => h / 2,
-        mount: 0.5,
+        x: w => w - 20,
+        y: 20,
+        mountX: 1,
         text: {
           text: 'Advanced example',
         },
@@ -142,7 +142,11 @@ export default class Advanced extends Lightning.Component {
   }
 
   _handleLeft() {
-    this._index = Math.max(0, this._index - 1)
+    if (this._index > 0) {
+      this._index--
+    } else {
+      return false
+    }
   }
 
   _handleRight() {

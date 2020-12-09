@@ -1,7 +1,7 @@
 import { Lightning, VideoPlayer, Utils } from '@lightningjs/sdk'
 import VideoUi from '../components/VideoUi.js'
 
-const bgColor = 0xff111111
+const bgColor = 0xff444444
 
 const videos = [
   'http://video.metrological.com/surfing.mp4',
@@ -22,10 +22,19 @@ export default class Advanced extends Lightning.Component {
 
   static _template() {
     return {
-      w: w => w,
-      h: h => h,
+      w: 1920,
+      h: 1080,
       rect: true,
       color: bgColor,
+      Text: {
+        x: w => w - 20,
+        y: 20,
+        mountX: 1,
+        text: {
+          text: 'Complete example',
+          textColor: 0xffffffff,
+        },
+      },
       Ui: {
         mountX: 0.5,
         x: 960,
