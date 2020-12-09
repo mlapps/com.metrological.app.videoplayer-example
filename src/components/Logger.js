@@ -41,7 +41,7 @@ export default class Logger extends Lightning.Component {
         text: {
           text: `[ ${formatTime(parseInt(log.timeStamp / 1000) % (60 * 60))}:${(
             parseInt(log.timeStamp % 1000) + '000'
-          ).slice(0, 4)} ]`,
+          ).slice(0, 4)} ${log.currentTime ? formatTime(log.currentTime) : ''}]`,
           fontSize: 20,
         },
         color: 0xff66dd66,

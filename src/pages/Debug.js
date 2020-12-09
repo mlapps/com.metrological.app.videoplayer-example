@@ -94,12 +94,12 @@ export default class Debug extends Lightning.Component {
   }
 
   // Hooks for VideoPlayer events
-  $videoPlayerEvent(eventName, eventObject) {
-    if (eventObject) {
-      this.tag('Logger').playerUpdated({ type: eventName, timeStamp: eventObject.event.timeStamp })
-    } else {
-      this.tag('Logger').playerUpdated({ type: eventName, timeStamp: Date.now() })
-    }
+  $videoPlayerEvent(eventName, eventObject, currentTime) {
+    this.tag('Logger').playerUpdated({
+      type: eventName,
+      timeStamp: eventObject && eventObject.event ? eventObject.event.timeStamp : Date.now(),
+      currentTime,
+    })
   }
 
   $videoPlayerPlaying() {
