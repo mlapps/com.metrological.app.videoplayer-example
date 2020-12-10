@@ -75,7 +75,7 @@ export default class Simple extends Lightning.Component {
     this.patch({
       Ui: {
         smooth: {
-          y: [visible ? 910 : 960],
+          y: [visible ? 790 : 840],
           alpha: [visible ? 1 : 0],
         },
       },
@@ -149,8 +149,7 @@ export default class Simple extends Lightning.Component {
   }
 
   _getFocused() {
-    return this
-    // return this.tag('Ui.Buttons').children[this._index]
+    return this.tag('Ui')
   }
 
   set playing(v) {

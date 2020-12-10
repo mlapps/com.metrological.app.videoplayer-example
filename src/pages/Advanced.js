@@ -13,6 +13,15 @@ export default class Advanced extends Lightning.Component {
       h: 1080,
       rect: true,
       color: bgColor,
+      Text: {
+        x: w => w - 20,
+        y: 20,
+        mountX: 1,
+        text: {
+          text: 'Advanced example',
+          textColor: 0xffffffff,
+        },
+      },
       ErrorScreen: {
         type: ErrorScreen,
         alpha: 0,
@@ -119,6 +128,9 @@ export default class Advanced extends Lightning.Component {
     VideoPlayer.clear()
     this.patch({
       color: bgColor,
+      Text: {
+        alpha: 1,
+      },
       ErrorScreen: {
         alpha: 0,
       },
@@ -205,6 +217,11 @@ export default class Advanced extends Lightning.Component {
       smooth: {
         color: [0x00000000],
       },
+      Text: {
+        smooth: {
+          alpha: [0],
+        },
+      },
       ErrorScreen: {
         smooth: {
           alpha: [0],
@@ -224,7 +241,16 @@ export default class Advanced extends Lightning.Component {
   }
 
   $videoPlayerAbort() {
-    this.setSmooth('color', bgColor)
+    this.patch({
+      smooth: {
+        color: [bgColor],
+      },
+      Text: {
+        smooth: {
+          alpha: [1],
+        },
+      },
+    })
     this.tag('Ui').playing = false
     this.tag('Ui').duration = 0
     this.tag('Ui').currentTime = 0
@@ -247,6 +273,11 @@ export default class Advanced extends Lightning.Component {
       ErrorScreen: {
         smooth: {
           alpha: [1],
+        },
+      },
+      Text: {
+        smooth: {
+          alpha: [0],
         },
       },
     })
