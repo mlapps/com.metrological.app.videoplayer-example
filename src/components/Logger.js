@@ -1,4 +1,4 @@
-import { Lightning, VideoPlayer } from '@lightningjs/sdk'
+import { Lightning } from '@lightningjs/sdk'
 import { formatTime } from '@/lib/helpers'
 
 export default class Logger extends Lightning.Component {
