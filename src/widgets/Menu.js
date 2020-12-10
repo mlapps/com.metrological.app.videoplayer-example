@@ -5,6 +5,7 @@ const menuItems = [
   { label: 'Simple', route: 'simple' },
   { label: 'Advanced', route: 'advanced' },
   { label: 'Complete', route: 'complete' },
+  { label: 'Debug', route: 'debug' },
 ]
 
 export default class Menu extends Lightning.Component {
