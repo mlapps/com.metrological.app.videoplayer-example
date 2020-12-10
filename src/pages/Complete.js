@@ -1,4 +1,4 @@
-import { Lightning, VideoPlayer, Utils } from '@lightningjs/sdk'
+import { Lightning, VideoPlayer, Utils, Registry } from '@lightningjs/sdk'
 import VideoUi from '@/components/VideoUi'
 import Playlist from '@/components/Playlist'
 import ErrorScreen from '@/components/ErrorScreen'
@@ -135,9 +135,9 @@ export default class Advanced extends Lightning.Component {
   _setInterfaceTimeout() {
     // Clear timeout if it already exists
     if (this._timeout) {
-      clearTimeout(this._timeout)
+      Registry.clearTimeout(this._timeout)
     }
-    this._timeout = setTimeout(() => {
+    this._timeout = Registry.setTimeout(() => {
       this._toggleInterface(false)
     }, interfaceTimeout)
   }

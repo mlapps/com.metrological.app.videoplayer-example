@@ -1,4 +1,4 @@
-import { Lightning, VideoPlayer } from '@lightningjs/sdk'
+import { Lightning, VideoPlayer, Registry } from '@lightningjs/sdk'
 import ErrorScreen from '@/components/ErrorScreen.js'
 import { videos } from '@/lib/helpers'
 import Button from '@/components/Button'
@@ -93,10 +93,10 @@ export default class Simple extends Lightning.Component {
   _setInterfaceTimeout() {
     // Clear timeout if it already exists
     if (this._timeout) {
-      clearTimeout(this._timeout)
+      Registry.clearTimeout(this._timeout)
     }
 
-    this._timeout = setTimeout(() => {
+    this._timeout = Registry.setTimeout(() => {
       this._toggleInterface(false)
     }, interfaceTimeout)
   }
