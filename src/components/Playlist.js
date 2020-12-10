@@ -35,8 +35,12 @@ export default class Playlist extends Lightning.Component {
   }
 
   _handleLeft() {
-    this._index = Math.max(0, this._index - 1)
-    this._slideList()
+    if (this._index > 0) {
+      this._index--
+      this._slideList()
+    } else {
+      return false
+    }
   }
 
   _handleRight() {
