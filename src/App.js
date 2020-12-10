@@ -25,7 +25,7 @@ export default class App extends Router.App {
     Router.startRouter(routes)
   }
 
-  _handleUp() {
+  _handleLeft() {
     Router.focusWidget('menu')
   }
 }

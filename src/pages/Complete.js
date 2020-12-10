@@ -1,16 +1,11 @@
 import { Lightning, VideoPlayer, Utils } from '@lightningjs/sdk'
-import VideoUi from '../components/VideoUi.js'
+import VideoUi from '@/components/VideoUi'
+import Playlist from '@/components/Playlist'
+import ErrorScreen from '@/components/ErrorScreen'
+import { videos } from '@/lib/helpers'
 
 const bgColor = 0xff111111
-
-const videos = [
-  'http://video.metrological.com/surfing.mp4',
-  'http://video.metrological.com/hot_town.mp4',
-  'http://video.metrological.com/fireworks_paris.mp4',
-  'http://video.metrological.com/drop.mp4',
-  'http://video.metrological.com/iceland.mp4',
-  'http://video.metrological.com/stockholm.mp4',
-]
+const interfaceTimeout = 5000
 
 export default class Advanced extends Lightning.Component {
   static getFonts() {
@@ -22,16 +17,34 @@ export default class Advanced extends Lightning.Component {
 
   static _template() {
     return {
-      w: w => w,
-      h: h => h,
+      w: 1920,
+      h: 1080,
       rect: true,
       color: bgColor,
+      ErrorScreen: {
+        type: ErrorScreen,
+        alpha: 0,
+      },
+      Playlist: {
+        type: Playlist,
+        x: 60,
+        y: 680,
+        signals: {
+          itemSelected: true,
+        },
+      },
       Ui: {
         mountX: 0.5,
-        x: 960,
+        x: w => w / 2,
         y: 830,
         type: VideoUi,
         buttons: [
+          {
+            ref: 'Previous',
+            icon: 'previous',
+            action: '$previous',
+            disabled: true,
+          },
           {
             icon: 'rewind',
             action: '$rewind',
@@ -42,35 +55,160 @@ export default class Advanced extends Lightning.Component {
             action: '$playPause',
           },
           {
+            icon: 'stop',
+            action: '$stop',
+          },
+          {
             icon: 'ffwd',
             action: '$forward',
+          },
+          {
+            ref: 'Next',
+            icon: 'next',
+            action: '$next',
+          },
+          {
+            ref: 'Mute',
+            icon: 'unmuted',
+            action: '$toggleMute',
+          },
+          {
+            ref: 'Loop',
+            icon: 'unloop',
+            action: '$toggleLoop',
+          },
+          {
+            icon: 'reload',
+            action: '$reload',
+          },
+          {
+            ref: 'Visible',
+            icon: 'visible',
+            action: '$showHide',
+          },
+        ],
+        rightButtons: [
+          {
+            ref: 'Resize',
+            icon: 'shrink',
+            action: '$toggleResize',
           },
         ],
       },
     }
   }
 
-  _init() {
-    VideoPlayer.consumer(this)
-    this.videos = []
+  _toggleInterface(visible) {
+    this.patch({
+      Ui: {
+        smooth: {
+          y: [visible ? 790 : 840],
+          alpha: [visible ? 1 : 0],
+        },
+      },
+      Playlist: {
+        smooth: {
+          y: [visible ? 680 : 730],
+          alpha: [visible ? 1 : 0],
+        },
+      },
+    })
+    this.tag('Ui')
+      .transition('y')
+      .on('finish', () => {
+        this._interfaceVisible = visible
+      })
+    if (visible) {
+      this._setInterfaceTimeout()
+    }
   }
 
-  randomVideo() {
-    if (!this.videos.length) {
-      this.videos = [...videos]
+  _setInterfaceTimeout() {
+    // Clear timeout if it already exists
+    if (this._timeout) {
+      clearTimeout(this._timeout)
     }
-    return this.videos.splice(Math.round(Math.random() * (this.videos.length - 1)), 1).pop()
+    this._timeout = setTimeout(() => {
+      this._toggleInterface(false)
+    }, interfaceTimeout)
+  }
+
+  _init() {
+    this._index = 0
+    this._videoIndex = 0
+    this.videos = [...videos]
+    this.tag('Playlist').videos = this.videos
+    // Initially video control interface is visible
+    this._interfaceVisible = true
+    // This variable will store timeout id for the interface hide functionality
+    this._timeout = null
+    this._setInterfaceTimeout()
+  }
+
+  _active() {
+    // Show video interface
+    this._toggleInterface(true)
+    // Set this object to receive VideoPlayer events
+    VideoPlayer.consumer(this)
+  }
+
+  _inactive() {
+    // Cleanup player and ui
+    VideoPlayer.clear()
+    this.patch({
+      color: bgColor,
+      ErrorScreen: {
+        alpha: 0,
+      },
+    })
+    this.tag('Ui').playing = false
+    this.tag('Ui.ProgressBar').duration = 0
+    this.tag('Ui.ProgressBar').currentTime = 0
+    this.tag('Playlist').selected = null
+  }
+
+  _focus() {
+    // Show video interface
+    this._toggleInterface(true)
+  }
+
+  // Capture every key and toggle interface. If it is visible, pass event to event handlers
+  _captureKey() {
+    this._toggleInterface(true)
+    return !this._interfaceVisible
   }
 
   _getFocused() {
-    return this.tag('Ui')
+    return this._index === 0 ? this.tag('Playlist') : this.tag('Ui')
+  }
+
+  _handleUp() {
+    if (this._index > 0) {
+      this._index--
+    } else {
+      return false
+    }
+  }
+
+  _handleDown() {
+    if (this._index < 2) {
+      this._index++
+    }
+  }
+
+  itemSelected(index) {
+    this._videoIndex = index
+    this.$playPause(true)
   }
 
   // Actions
   $playPause(next = false) {
     next === true && VideoPlayer.clear()
     if (!VideoPlayer.src) {
-      VideoPlayer.open(this.randomVideo())
+      if (this.videos[this._videoIndex]) {
+        this.tag('Playlist').selected = this._videoIndex
+        VideoPlayer.open(this.videos[this._videoIndex])
+      }
     } else {
       VideoPlayer.playPause()
     }
@@ -78,7 +216,22 @@ export default class Advanced extends Lightning.Component {
 
   $stop() {
     VideoPlayer.clear()
+    this.tag('Playlist').selected = null
     this.color = bgColor
+  }
+
+  $previous() {
+    if (this._videoIndex > 0) {
+      this._videoIndex--
+      this.$playPause(true)
+    }
+  }
+
+  $next() {
+    if (this._videoIndex < videos.length - 1) {
+      this._videoIndex++
+      this.$playPause(true)
+    }
   }
 
   $rewind() {
@@ -127,8 +280,18 @@ export default class Advanced extends Lightning.Component {
 
   // hooks for VideoPlayer events
   $videoPlayerPlaying() {
-    this.setSmooth('color', 0x00000000)
+    this.patch({
+      smooth: {
+        color: [0x00000000],
+      },
+      ErrorScreen: {
+        smooth: {
+          alpha: [0],
+        },
+      },
+    })
     this.tag('Ui').playing = true
+    this.tag('Ui').visible = !VideoPlayer.visible
   }
 
   $videoPlayerPause() {
@@ -147,6 +310,7 @@ export default class Advanced extends Lightning.Component {
   }
 
   $videoPlayerEnded() {
+    this._videoIndex++
     this.$playPause(true)
   }
 
@@ -156,5 +320,15 @@ export default class Advanced extends Lightning.Component {
 
   $videoPlayerLoadedMetadata() {
     this.tag('Ui').duration = VideoPlayer.duration
+  }
+
+  $videoPlayerError() {
+    this.patch({
+      ErrorScreen: {
+        smooth: {
+          alpha: [1],
+        },
+      },
+    })
   }
 }

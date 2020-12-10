@@ -3,12 +3,15 @@ import { Lightning } from '@lightningjs/sdk'
 export default class Playlist extends Lightning.Component {
   static _template() {
     return {
-      flex: { direction: 'row' },
+      Wrapper: {
+        x: 0,
+        flex: { direction: 'row' },
+      },
     }
   }
 
   set videos(v) {
-    this.children = v.map(item => ({
+    this.tag('Wrapper').children = v.map(item => ({
       type: PlaylistTile,
       flexItem: { marginRight: 20 },
       title: item,
@@ -18,11 +21,11 @@ export default class Playlist extends Lightning.Component {
 
   set selected(v) {
     if (this._selected !== null) {
-      this.children[this._selected].highlight = false
+      this.tag('Wrapper').children[this._selected].highlight = false
     }
     this._selected = v
     if (this._selected !== null) {
-      this.children[this._selected].highlight = true
+      this.tag('Wrapper').children[this._selected].highlight = true
     }
   }
 
@@ -32,12 +35,16 @@ export default class Playlist extends Lightning.Component {
   }
 
   _handleLeft() {
-    this._index = Math.max(0, this._index - 1)
-    this._slideList()
+    if (this._index > 0) {
+      this._index--
+      this._slideList()
+    } else {
+      return false
+    }
   }
 
   _handleRight() {
-    this._index = Math.min(this.children.length - 1, this._index + 1)
+    this._index = Math.min(this.tag('Wrapper').children.length - 1, this._index + 1)
     this._slideList()
   }
 
@@ -47,14 +54,16 @@ export default class Playlist extends Lightning.Component {
 
   _slideList() {
     this.patch({
-      smooth: {
-        x: [-320 * this._index],
+      Wrapper: {
+        smooth: {
+          x: [-320 * this._index],
+        },
       },
     })
   }
 
   _getFocused() {
-    return this.children[this._index]
+    return this.tag('Wrapper').children[this._index]
   }
 }
 
